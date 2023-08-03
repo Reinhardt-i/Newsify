@@ -1,9 +1,10 @@
 // WIll define the events, states, and BLoC class in this file.
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'article_model.dart';
 
-// Events
 abstract class NewsEvent {}
 
 class SearchNewsEvent extends NewsEvent {
@@ -12,7 +13,6 @@ class SearchNewsEvent extends NewsEvent {
   SearchNewsEvent(this.query);
 }
 
-// States
 abstract class NewsState {}
 
 class NewsInitialState extends NewsState {}
@@ -31,7 +31,6 @@ class NewsErrorState extends NewsState {
   NewsErrorState(this.message);
 }
 
-// BLoC
 class NewsBloc extends Bloc<NewsEvent, NewsState> {
   NewsBloc() : super(NewsInitialState());
 
@@ -51,18 +50,20 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   }
 
   Future<List<Article>> _fetchNewsArticles(String query) async {
-  final response = await http.get(
-      'https://newsapi.org/v2/everything?q=$query&apiKey=836e7db42eb24f68a30c5c5d20c42136');
 
-  if (response.statusCode == 200) {
-    final jsonData = json.decode(response.body);
-    final List<Article> articles = jsonData['articles']
-        .map<Article>((data) => Article.fromJson(data))
-        .toList();
-    return articles;
-  } else {
-    throw Exception('Failed to load news');
+    final response = await http.get(
+      Uri.parse('https://newsapi.org/v2/everything?q=$query&apiKey=836e7db42eb24f68a30c5c5d20c42136'),
+      );
+
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final List<Article> articles = (jsonData['articles'] as List)
+          .map<Article>((data) => Article.fromJson(data))
+          .toList();
+      return articles;
+    } else {
+      throw Exception('Failed to load news');
+    }
   }
-}
-
 }

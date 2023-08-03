@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'news_bloc.dart';
+import 'article_model.dart';
 
 class NewsScreen extends StatelessWidget {
   @override
@@ -10,7 +12,7 @@ class NewsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('News App'),
+        title: Text('Newsify'),
       ),
       body: Column(
         children: [

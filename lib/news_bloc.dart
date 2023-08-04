@@ -1,5 +1,6 @@
 // WIll define the events, states, and BLoC class in this file.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -50,11 +51,10 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   }
 
   Future<List<Article>> _fetchNewsArticles(String query) async {
-
     final response = await http.get(
-      Uri.parse('https://newsapi.org/v2/everything?q=$query&apiKey=836e7db42eb24f68a30c5c5d20c42136'),
-      );
-
+      Uri.parse(
+          'https://newsapi.org/v2/everything?q=$query&apiKey=836e7db42eb24f68a30c5c5d20c42136'),
+    );
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);

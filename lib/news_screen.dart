@@ -1,9 +1,8 @@
-// UI that interacts with the BLoC.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'news_bloc.dart';
 import 'article_model.dart';
+import 'news_details_screen.dart'; // Import the NewsDetailsScreen
 
 class NewsScreen extends StatelessWidget {
   @override
@@ -64,7 +63,6 @@ class SearchBar extends StatelessWidget {
           SizedBox(width: 8.0),
           ElevatedButton(
             onPressed: () {
-              // Trigger the search event
               newsBloc.add(SearchNewsEvent('Your Search Query'));
             },
             child: Text('Search'),
@@ -86,32 +84,25 @@ class NewsList extends StatelessWidget {
       itemCount: articles.length,
       itemBuilder: (context, index) {
         final article = articles[index];
-        return NewsBlock(article.title, article.description);
+        return NewsListItem(article.title, article.description);
       },
     );
   }
 }
 
-class NewsBlock extends StatelessWidget {
+class NewsListItem extends StatelessWidget {
   final String title;
   final String description;
 
-  NewsBlock(this.title, this.description);
+  NewsListItem(this.title, this.description);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Show popup page with news details
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text(title),
-              content: Text(description),
-            );
-          },
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => NewsDetailsScreen(title, description),
+        ));
       },
       child: Container(
         padding: EdgeInsets.all(16.0),

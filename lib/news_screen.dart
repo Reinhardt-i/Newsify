@@ -38,10 +38,17 @@ class NewsScreen extends StatelessWidget {
   }
 }
 
-class SearchBar extends StatelessWidget {
+class SearchBar extends StatefulWidget {
   final NewsBloc newsBloc;
 
   SearchBar(this.newsBloc);
+
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +58,7 @@ class SearchBar extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
-              onChanged: (value) {
-                newsBloc.add(SearchNewsEvent(value));
-              },
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search news...',
                 border: OutlineInputBorder(),
@@ -63,7 +68,10 @@ class SearchBar extends StatelessWidget {
           SizedBox(width: 8.0),
           ElevatedButton(
             onPressed: () {
-              newsBloc.add(SearchNewsEvent('Your Search Query'));
+              final query = _searchController.text;
+              if (query.isNotEmpty) {
+                widget.newsBloc.add(SearchNewsEvent(query));
+              }
             },
             child: Text('Search'),
           ),
